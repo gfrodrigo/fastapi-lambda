@@ -1,9 +1,10 @@
 import json
 import os
+
 from ddtrace import tracer
-from typing import Literal, Optional
-from uuid import uuid4
-from pydantic import BaseModel
+from sqlalchemy import Column, Integer, String, Float
+
+from database import Base
 
 BOOKS_FILE = "books.json"
 BOOKS = []
@@ -13,11 +14,12 @@ if os.path.exists(BOOKS_FILE):
         BOOKS = json.load(f)
 
 
-class Book(BaseModel):
-    name: str
-    genre: Literal["fiction", "non-fiction"]
-    price: float
-    book_id: Optional[str] = uuid4().hex
+class Book(Base):
+    __tablename__ = "books"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True)
+    genre = Column(String)
+    price = Column(Float)
 
     @staticmethod
     @tracer.wrap(service="fastapi", resource="model/list-books", span_type="sql")

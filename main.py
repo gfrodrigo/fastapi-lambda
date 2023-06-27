@@ -1,16 +1,14 @@
-import json
-
-from uuid import uuid4
-from fastapi import FastAPI, HTTPException
 import random
-from fastapi.encoders import jsonable_encoder
 
-from mangum import Mangum
 from ddtrace import tracer
+from fastapi import FastAPI, HTTPException
+from mangum import Mangum
 
-from model import Book, BOOKS_FILE
+import models
+from database import engine
 from service import BookService
 
+models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 handler = Mangum(app)
 
@@ -30,6 +28,7 @@ async def random_book():
 @app.get("/list-books")
 @tracer.wrap(service="fastapi", resource="GET /list-books", span_type="web")
 async def list_books():
+
     return {"books": BookService().list()}
 
 
@@ -42,17 +41,17 @@ async def book_by_index(index: int):
         raise HTTPException(404, f"Book index {index} out of range ({len(books)}).")
 
 
-@app.post("/add-book")
-async def add_book(book: Book):
-    book.book_id = uuid4().hex
-    json_book = jsonable_encoder(book)
-    books = BookService().list()
-    books.append(json_book)
-
-    with open(BOOKS_FILE, "w") as f:
-        json.dump(books, f)
-
-    return {"book_id": book.book_id}
+# @app.post("/add-book")
+# async def add_book(book: Book):
+#     book.book_id = uuid4().hex
+#     json_book = jsonable_encoder(book)
+#     books = BookService().list()
+#     books.append(json_book)
+#
+#     with open(BOOKS_FILE, "w") as f:
+#         json.dump(books, f)
+#
+#     return {"book_id": book.book_id}
 
 
 @app.get("/get-book")
