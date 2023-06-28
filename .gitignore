@@ -3,3 +3,4 @@ lib
 python
 *.zip
 .idea
+.DS_Store
