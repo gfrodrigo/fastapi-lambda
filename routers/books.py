@@ -3,7 +3,7 @@ from service import BookService
 from fastapi import APIRouter, HTTPException
 from ddtrace import tracer
 
-router = APIRouter(prefix="/books", tags=["books"])
+router = APIRouter()
 
 
 @router.get("/random-book")
