@@ -4,3 +4,4 @@ python
 *.zip
 .idea
 .DS_Store
+.env

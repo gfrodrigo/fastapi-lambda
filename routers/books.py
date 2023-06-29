@@ -1,7 +1,12 @@
 import random
-from service import BookService
-from fastapi import APIRouter, HTTPException
+
 from ddtrace import tracer
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
+
+from database import get_db
+from models import Book
+from service import BookService
 
 router = APIRouter()
 
@@ -16,6 +21,13 @@ async def random_book():
 @tracer.wrap(service="fastapi", resource="GET /list-books", span_type="web")
 async def list_books():
     return {"books": BookService().list()}
+
+
+@router.get("/books")
+@tracer.wrap(service="fastapi", resource="GET /list-books", span_type="web")
+async def list_books(db: Session = Depends(get_db)):
+    books = db.query(Book).all()
+    return {"books": books}
 
 
 @router.get("/book_by_index/{index}")

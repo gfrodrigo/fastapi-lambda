@@ -4,12 +4,12 @@ from mangum import Mangum
 
 import models
 from database import engine
-from routers import api
+from routers import api, services
 
 models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.include_router(api.api_router, prefix="/api", tags=["api"])
-app.include_router(api.api_router, prefix="/services", tags=["services"])
+app.include_router(services.services_router, prefix="/services", tags=["services"])
 handler = Mangum(app)
 
 

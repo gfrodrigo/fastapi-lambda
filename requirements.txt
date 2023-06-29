@@ -2,3 +2,4 @@ fastapi
 uvicorn
 mangum
 SQLAlchemy
+psycopg2-binary
