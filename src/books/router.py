@@ -4,9 +4,9 @@ from ddtrace import tracer
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.orm import Session
 
-from database import get_db
-from models import Book
-from service import BookService
+from src.database import get_db
+from src.books.model import Book
+from src.books.service import BookService
 
 router = APIRouter()
 
@@ -24,7 +24,7 @@ async def list_books():
 
 
 @router.get("/books")
-@tracer.wrap(service="fastapi", resource="GET /list-books", span_type="web")
+@tracer.wrap(service="fastapi", resource="GET /books", span_type="web")
 async def list_books(db: Session = Depends(get_db)):
     books = db.query(Book).all()
     return {"books": books}

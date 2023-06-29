@@ -4,9 +4,9 @@ import os
 from ddtrace import tracer
 from sqlalchemy import Column, Integer, String, Float
 
-from database import Base
+from src.database import Base
 
-BOOKS_FILE = "books.json"
+BOOKS_FILE = "../../books.json"
 BOOKS = []
 
 if os.path.exists(BOOKS_FILE):

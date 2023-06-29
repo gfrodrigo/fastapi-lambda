@@ -2,11 +2,11 @@ from ddtrace import tracer
 from fastapi import FastAPI
 from mangum import Mangum
 
-import models
-from database import engine
-from routers import api, services
+from src.books import model
+from src.routers import api, services
+from src.database import engine
 
-models.Base.metadata.create_all(bind=engine)
+model.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.include_router(api.api_router, prefix="/api", tags=["api"])
 app.include_router(services.services_router, prefix="/services", tags=["services"])

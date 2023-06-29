@@ -1,4 +1,4 @@
-from models import Book
+from src.books.model import Book
 from ddtrace import tracer
 
 

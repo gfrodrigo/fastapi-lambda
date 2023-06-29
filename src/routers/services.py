@@ -1,4 +1,4 @@
-from routers import books
+from src.books import router as books
 from fastapi import APIRouter
 
 services_router = APIRouter()
